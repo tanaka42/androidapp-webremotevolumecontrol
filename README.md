@@ -33,6 +33,8 @@ As a consequence it should not be accesible from the Internet, evenif your inter
 Various information :
 =====================
 
+The base HTTP server code comes from Sonu Auti which I hereby thank : https://github.com/sonuauti/Android-Web-Server/
+
 I did not include a Mute button or a Slider input at the moment because to do so Android API seems to require me to point at a specific audio stream : I supposed this would not work in any situation, or make things complicated, so I gave up for now.
 
 This is my very first GitHub experience, and my very first Android experience too, any advice or remark is welcome.

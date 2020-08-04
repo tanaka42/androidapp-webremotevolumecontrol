@@ -1,0 +1,67 @@
+<html lang="fr">
+    <head>
+        <title>HttpSoundControl</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0">
+        <style type="text/css">
+			body {
+				background-color: darkgray;
+			}
+			
+            .box {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+                align-content: center;
+                margin-top: 15vh;
+                margin-left: 22vw;
+                width: 50vw;
+
+            }
+
+            input {
+                margin-bottom: 1em;
+                padding: 0.75em;
+                font-size: 200%;
+                height: 14vh;
+                object-fit: contain;
+                border: 1px solid black;
+				border-radius: 3em;
+				background-color: gray;
+				outline: none;
+            }
+			
+			input:active {
+				padding: 0.8em;
+			}
+        </style>
+        <script type="application/javascript">
+            function asyncVolume(e) {
+                console.log(e.id);
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/" + e.id, true);
+                xhr.onload = function (e) {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status == 200) {
+                            console.log(xhr.responseText);
+                        } else {
+                            console.log(xhr.statusText);
+                        }
+                    }
+                };
+                xhr.onerror = function(e) {
+                    console.log(xhr.statusText);
+                };
+                xhr.send();
+                return false;
+            }
+        </script>
+    </head>
+    <body>
+    <div class="box" >
+        <input type="image" name="volume-up" id="volume-up" value="volume-up" onclick="return asyncVolume(this);" src="/volume-up.png"/>
+        <input type="image" name="volume-down" id="volume-down" value="volume-down"  onclick="return asyncVolume(this);" src="/volume-down.png" />
+    </div>
+    </body>
+</html>

@@ -36,4 +36,5 @@ Various information :
 I did not include a Mute button or a Slider input at the moment because to do so Android API seems to require me to point at a specific audio stream : I supposed this would not work in any situation, or make things complicated, so I gave up for now.
 
 This is my very first GitHub experience, and my very first Android experience too, any advice or remark is welcome.
+
 I did build that app because I often use an Android tablet, connected to an audio sound system (HiFi), to play music, and I wanted to be able to adjust sound remotely from an Iphone, in a simple way (I mean not by using a Teamviewer/Vysor like thing).

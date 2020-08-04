@@ -20,12 +20,12 @@ That single page will display only two buttons, Raise Volume and Lower Volume, w
 
 The web server isn't really one : it does not list directories or serve any requested file from filesystem.
 It only responds to a few commands (URLs below) (see the switch case in HttpServer.java, subclass ClientThread, method Run) :
-/ : serves the web page
-/volume-up.png : serves the volume-up.png image included in the web page
-/volume-down.png : serves the volume-up.png image included in the web page
-/volume-up : raises volume
-/volume-down : lowers volume
-any other URL will respond with a 404.
+* / : serves the web page
+* /volume-up.png : serves the volume-up.png image included in the web page
+* /volume-down.png : serves the volume-up.png image included in the web page
+* /volume-up : raises volume
+* /volume-down : lowers volume
+* any other URL will respond with a 404.
 
 Also it is supposed to listen only on local address : it obtains your local IP address and listens only on that address.
 As a consequence it should not be accesible from the Internet, evenif your internet box doesn't have a firewall with 9000 port closed by default.

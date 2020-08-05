@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.IBinder;
 
-import com.walternative42.httpsoundcontrol.R;
+import com.tanaka42.httpsoundcontrol.R;
 
 public class HttpSoundControlService extends Service {
     public HttpSoundControlService() {

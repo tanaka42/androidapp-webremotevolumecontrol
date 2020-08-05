@@ -11,12 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.nio.file.AccessMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -57,9 +55,9 @@ public class HttpServer extends Thread {
             while (isStart) {
                 try {
                     Socket newSocket = serverSocket.accept();
-                    Thread newClient = new EchoThread(newSocket);
+                    Thread newClient = new ClientThread(newSocket);
                     newClient.start();
-                } catch (SocketTimeoutException s) {
+                } catch (SocketTimeoutException ignored) {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -73,11 +71,12 @@ public class HttpServer extends Thread {
         return "http://" + server_ip + ":" + server_port;
     }
 
-    public class EchoThread extends Thread {
+    public class ClientThread extends Thread {
         protected Socket socket;
-        private Context context;
+        private String content_type = "";
+        private String status_code;
 
-        public EchoThread(Socket clientSocket) {
+        public ClientThread(Socket clientSocket) {
             this.socket = clientSocket;
         }
 
@@ -102,48 +101,46 @@ public class HttpServer extends Thread {
 
                 byte[] data = new byte[1500];
 
-                while (in.read(data) != -1) {
-                    String recData = new String(data).trim();
-                    String[] header = recData.split("\\r?\\n");
-                    String[] h1 = header[0].split(" ");
+                if (in != null) {
+                    while (in.read(data) != -1) {
+                        String recData = new String(data).trim();
+                        String[] header = recData.split("\\r?\\n");
+                        String[] h1 = header[0].split(" ");
 
-                    final String requestLocation = h1[1];
+                        final String requestLocation = h1[1];
 
-                    int responseStatus = 200;
-                    String requestedFile = "";
+                        status_code = "200";
+                        String requestedFile = "";
 
-                    switch (requestLocation) {
-                        case "/volume-up":
-                            audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
-                            break;
-                        case "/volume-down":
-                            audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
-                            break;
-                        case "/volume-up.png":
-                        case "/volume-down.png":
-                            requestedFile = requestLocation.substring(1);
-                            break;
-                        case "/":
-                            requestedFile = "httpsoundcontrol_spa.html";
-                            break;
-                        default:
-                            responseStatus = 404;
-                            break;
-                    }
-
-                    if (requestedFile.isEmpty()) {
-                        constructHeader(out, "0", "", responseStatus);
-                    } else {
-                        InputStream fileStream = context.getAssets().open(requestedFile, AssetManager.ACCESS_BUFFER);
-                        int size = fileStream.available();
-                        byte[] buffer = new byte[size];
-                        fileStream.read(buffer);
-                        if (requestedFile.matches(".*\\.png$")) {
-                            constructHeaderPng(out, buffer.length + "", buffer, responseStatus);
-                        } else {
-                            String responseData = new String(buffer);
-                            constructHeader(out, responseData.length() + "", responseData, responseStatus);
+                        switch (requestLocation) {
+                            case "/volume-up":
+                                audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
+                                break;
+                            case "/volume-down":
+                                audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+                                break;
+                            case "/volume-up.png":
+                            case "/volume-down.png":
+                                requestedFile = requestLocation.substring(1);
+                                content_type = "image/png";
+                                break;
+                            case "/":
+                                requestedFile = "httpsoundcontrol_spa.html";
+                                content_type = "text/html";
+                                break;
+                            default:
+                                status_code = "404";
+                                break;
                         }
+
+                        byte[] buffer = new byte[0];
+                        if (!requestedFile.isEmpty()) {
+                            InputStream fileStream = context.getAssets().open(requestedFile, AssetManager.ACCESS_BUFFER);
+                            int size = fileStream.available();
+                            buffer = new byte[size];
+                            int readResult = fileStream.read(buffer);
+                        }
+                        writeResponse(out, buffer.length + "", buffer, status_code, content_type);
                     }
                 }
             } catch (IOException e) {
@@ -156,40 +153,35 @@ public class HttpServer extends Thread {
         pw.append(key).append(": ").append(value).append("\r\n");
     }
 
-    private void constructHeaderPng(DataOutputStream output, String size, byte[] data, int code) {
-        try{
+    private void writeResponse(DataOutputStream output, String size, byte[] data, String status_code, String content_type) {
+        try {
             SimpleDateFormat gmtFrmt = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss 'GMT'", Locale.US);
             gmtFrmt.setTimeZone(TimeZone.getTimeZone("GMT"));
             PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(output)), false);
-            pw.append("HTTP/1.1 ").append(code + "").append(" \r\n");
-            printHeader(pw, "Content-Type", "image/png");
+            pw.append("HTTP/1.1 ").append(status_code).append(" \r\n");
+            if (!content_type.isEmpty()) {
+                printHeader(pw, "Content-Type", content_type);
+            }
             printHeader(pw, "Date", gmtFrmt.format(new Date()));
             printHeader(pw, "Connection", "close");
             printHeader(pw, "Content-Length", size);
-            printHeader(pw, "Server", "192.168.1.47");
+            printHeader(pw, "Server", server_ip);
             pw.append("\r\n");
             pw.flush();
-            output.write(data);
-            output.flush();
-            pw.close();
+            switch (content_type) {
+                case "text/html":
+                    pw.append(new String(data));
+                    break;
+                case "image/png":
+                    output.write(data);
+                    output.flush();
+                    break;
+            }
+            pw.flush();
+            //pw.close();
         } catch (Exception er) {
             er.printStackTrace();
         }
-    }
-
-    private void constructHeader(DataOutputStream output, String size, String data, int code) {
-        SimpleDateFormat gmtFrmt = new SimpleDateFormat("E, d MMM yyyy HH:mm:ss 'GMT'", Locale.US);
-        gmtFrmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-        PrintWriter pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(output)), false);
-        pw.append("HTTP/1.1 ").append(code + "").append(" \r\n");
-        printHeader(pw, "Date", gmtFrmt.format(new Date()));
-        printHeader(pw, "Connection", "close");
-        printHeader(pw, "Content-Length", size);
-        printHeader(pw, "Server", "192.168.1.47");
-        pw.append("\r\n");
-        pw.append(data);
-        pw.flush();
-        pw.close();
     }
 
     public static void stopServer() {

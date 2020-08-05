@@ -1,4 +1,4 @@
-package com.tanaka42.httpsoundcontrol;
+package com.tanaka42.webremotesoundcontrol;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,7 +12,7 @@ public class TranslucentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Context context = getApplicationContext();
-        context.startForegroundService(new Intent(context, HttpSoundControlService.class));
+        context.startForegroundService(new Intent(context, WebRemoteSoundControlService.class));
         finish();
     }
 }

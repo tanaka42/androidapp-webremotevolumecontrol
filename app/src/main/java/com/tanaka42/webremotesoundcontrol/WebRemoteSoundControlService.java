@@ -1,4 +1,4 @@
-package com.tanaka42.httpsoundcontrol;
+package com.tanaka42.webremotesoundcontrol;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,21 +10,20 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.os.IBinder;
 
-import com.tanaka42.httpsoundcontrol.R;
+import com.tanaka42.webremotesoundcontrol.R;
 
-public class HttpSoundControlService extends Service {
-    public HttpSoundControlService() {
+public class WebRemoteSoundControlService extends Service {
+    public WebRemoteSoundControlService() {
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
     public void onCreate() {
-        //System.out.println("Starting Service");
+        System.out.println("Starting service ...");
 
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -40,14 +39,14 @@ public class HttpSoundControlService extends Service {
 
         notificationManager.createNotificationChannel(chan);
 
-        Intent notificationIntent = new Intent(this, HttpSoundControlService.class);
+        Intent notificationIntent = new Intent(this, WebRemoteSoundControlService.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification = new Notification.Builder(this, channelId)
                 .setContentIntent(pendingIntent)
-                .setContentTitle("Contrôle du volume à distance actif")
-                .setContentText(httpServer.getURL())
                 .build();
         startForeground(42, notification);
+
+        System.out.println("Service started.");
     }
 
     @Override

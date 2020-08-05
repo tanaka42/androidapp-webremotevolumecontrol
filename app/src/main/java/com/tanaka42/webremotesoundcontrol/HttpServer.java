@@ -1,8 +1,10 @@
-package com.tanaka42.httpsoundcontrol;
+package com.tanaka42.webremotesoundcontrol;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
+import android.os.Bundle;
 
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -42,16 +44,24 @@ public class HttpServer extends Thread {
 
     @Override
     public void run() {
+        System.out.println("Starting server ...");
         try {
             try(final DatagramSocket socket = new DatagramSocket()){
                 socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
                 server_ip = socket.getLocalAddress().getHostAddress();
                 socket.disconnect();
+
+                Intent urlUpdatedIntent = new Intent("com.tanaka42.webremotesoundcontrol.urlupdated");
+                Bundle extras = new Bundle();
+                extras.putString("url", "http://" + server_ip + ":" + server_port);
+                urlUpdatedIntent.putExtras(extras);
+                context.sendBroadcast(urlUpdatedIntent);
             }
 
             InetAddress addr = InetAddress.getByName(server_ip);
             serverSocket = new ServerSocket(server_port, 100, addr);
             serverSocket.setSoTimeout(5000);
+            System.out.println("Server started : listening.");
             while (isStart) {
                 try {
                     Socket newSocket = serverSocket.accept();
@@ -62,13 +72,10 @@ public class HttpServer extends Thread {
                     e.printStackTrace();
                 }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public String getURL() {
-        return "http://" + server_ip + ":" + server_port;
     }
 
     public class ClientThread extends Thread {
@@ -125,7 +132,7 @@ public class HttpServer extends Thread {
                                 content_type = "image/png";
                                 break;
                             case "/":
-                                requestedFile = "httpsoundcontrol_spa.html";
+                                requestedFile = "webremotesoundcontrol_spa.html";
                                 content_type = "text/html";
                                 break;
                             default:

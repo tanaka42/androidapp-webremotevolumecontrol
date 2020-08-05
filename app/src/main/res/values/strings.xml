@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">HttpSoundControl</string>
+    <string name="app_name" translatable="false">WebRemoteSoundControl</string>
+    <string name="close">Close</string>
+    <string name="starting">Start in progress&#8230;</string>
 </resources>

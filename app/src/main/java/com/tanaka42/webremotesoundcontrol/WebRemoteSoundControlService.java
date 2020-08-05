@@ -33,8 +33,8 @@ public class WebRemoteSoundControlService extends Service {
         String channelId = getString(R.string.app_name);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationChannel chan = new NotificationChannel(channelId, "Indicateur de fonctionnement", NotificationManager.IMPORTANCE_MIN);
-        chan.setDescription("Indicateur de fonctionnement");
+        NotificationChannel chan = new NotificationChannel(channelId, getString(R.string.running_indicator), NotificationManager.IMPORTANCE_MIN);
+        chan.setDescription(getString(R.string.running_indicator));
         chan.setSound(null, null);
 
         notificationManager.createNotificationChannel(chan);

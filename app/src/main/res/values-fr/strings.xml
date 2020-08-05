@@ -1,4 +1,5 @@
 <resources>
     <string name="close">Fermer</string>
     <string name="starting">Démarrage en cours&#8230;</string>
+    <string name="running_indicator">Indicateur de fonctionnement</string>
 </resources>

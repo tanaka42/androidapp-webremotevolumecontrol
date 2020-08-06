@@ -3,4 +3,5 @@
     <string name="close">Close</string>
     <string name="starting">Start in progress&#8230;</string>
     <string name="running_indicator">Running indicator</string>
+    <string name="how_to">Connect to below address from another device to start controlling sound volume remotely.</string>
 </resources>

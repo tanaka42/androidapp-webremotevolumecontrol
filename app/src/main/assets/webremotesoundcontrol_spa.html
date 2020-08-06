@@ -44,18 +44,6 @@
                 console.log(e.id);
                 var xhr = new XMLHttpRequest();
                 xhr.open("POST", "/" + e.id, true);
-                xhr.onload = function (e) {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status == 200) {
-                            console.log(xhr.responseText);
-                        } else {
-                            console.log(xhr.statusText);
-                        }
-                    }
-                };
-                xhr.onerror = function(e) {
-                    console.log(xhr.statusText);
-                };
                 xhr.send();
                 return false;
             }

@@ -11,6 +11,9 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.IBinder;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import com.tanaka42.webremotesoundcontrol.R;
 
 public class WebRemoteSoundControlService extends Service {
@@ -32,27 +35,28 @@ public class WebRemoteSoundControlService extends Service {
         httpServer.start();
 
         String channelId = getString(R.string.app_name);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
         Intent notificationIntent = new Intent(this, WebRemoteSoundControlService.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification;
 
-        if (Build.VERSION.SDK_INT >= 26) {
-            NotificationChannel chan = new NotificationChannel(channelId, getString(R.string.running_indicator), NotificationManager.IMPORTANCE_MIN);
-            chan.setDescription(getString(R.string.running_indicator));
-            chan.setSound(null, null);
-            notificationManager.createNotificationChannel(chan);
-            notification = new Notification.Builder(this, channelId)
-                    .setContentIntent(pendingIntent)
-                    .build();
-        } else {
-            notification = new Notification.Builder(this)
-                    .setContentIntent(pendingIntent)
-                    .build();
-        }
+        notification = new NotificationCompat.Builder(this, channelId)
+                .setContentIntent(pendingIntent)
+                .setContentTitle("Content Title")
+                .setContentText("Content Text")
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .build();
+
         startForeground(42, notification);
         System.out.println("Service started.");
+    }
+
+    private void createNotificationChannel(String channelId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, getString(R.string.running_indicator), NotificationManager.IMPORTANCE_MIN);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override

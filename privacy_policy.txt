@@ -1,0 +1,5 @@
+English :
+This application does not collect any information of any kind.
+
+Français :
+Cette application ne collecte tout simplement aucune donnée.

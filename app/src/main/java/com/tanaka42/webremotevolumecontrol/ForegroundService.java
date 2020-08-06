@@ -1,4 +1,4 @@
-package com.tanaka42.webremotesoundcontrol;
+package com.tanaka42.webremotevolumecontrol;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -14,10 +14,10 @@ import android.os.IBinder;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.tanaka42.webremotesoundcontrol.R;
+import com.tanaka42.webremotevolumecontrol.R;
 
-public class WebRemoteSoundControlService extends Service {
-    public WebRemoteSoundControlService() {
+public class ForegroundService extends Service {
+    public ForegroundService() {
     }
 
     @Override
@@ -36,9 +36,11 @@ public class WebRemoteSoundControlService extends Service {
 
         String channelId = getString(R.string.app_name);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-        Intent notificationIntent = new Intent(this, WebRemoteSoundControlService.class);
+        Intent notificationIntent = new Intent(this, ForegroundService.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
         Notification notification;
+
+        createNotificationChannel(channelId);
 
         notification = new NotificationCompat.Builder(this, channelId)
                 .setContentIntent(pendingIntent)

@@ -1,4 +1,4 @@
-package com.tanaka42.webremotesoundcontrol;
+package com.tanaka42.webremotevolumecontrol;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -31,13 +31,13 @@ public class StartupActivity extends Activity {
                 mURLTextView.setText(mServerURL);
             }
         };
-        registerReceiver(urlUpdatedReceiver, new IntentFilter("com.tanaka42.webremotesoundcontrol.urlupdated"));
+        registerReceiver(urlUpdatedReceiver, new IntentFilter("com.tanaka42.webremotevolumecontrol.urlupdated"));
 
         Context context = getApplicationContext();
         if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(new Intent(context, WebRemoteSoundControlService.class));
+            context.startForegroundService(new Intent(context, ForegroundService.class));
         } else {
-            context.startService(new Intent(context, WebRemoteSoundControlService.class));
+            context.startService(new Intent(context, ForegroundService.class));
         }
 
         mURLTextView = findViewById(R.id.textViewURL);

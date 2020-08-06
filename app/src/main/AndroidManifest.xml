@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.tanaka42.webremotesoundcontrol">
+    package="com.tanaka42.webremotevolumecontrol">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -14,7 +14,7 @@
         android:theme="@android:style/Theme.Black">
 
         <activity
-            android:name=".StartupActivity" >
+            android:name="com.tanaka42.webremotevolumecontrol.StartupActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -22,7 +22,7 @@
         </activity>
 
         <service
-            android:name=".WebRemoteSoundControlService"
+            android:name="com.tanaka42.webremotevolumecontrol.ForegroundService"
             android:enabled="true"
             android:exported="false" />
     </application>

@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name" translatable="false">WebRemoteSoundControl</string>
+    <string name="app_name">Web Remote Volume Control</string>
     <string name="close">Close</string>
     <string name="starting">Start in progress&#8230;</string>
     <string name="running_indicator">Running indicator</string>
     <string name="how_to">Connect to below address from another device to start controlling sound volume remotely.</string>
+    <string name="close_when_ready">Remote volume control will remain accessible after you close this window.</string>
 </resources>

@@ -1,4 +1,4 @@
-# androidapp-websoundcontrol
+# AndroidApp-WebRemoteVolumeControl
 Adjust sound volume of your Android device from any device that has a web browser.
 This includes non-Android devices such as Apple or Microsoft devices, maybe televisions or even maybe watches if these things have web browsers.
 

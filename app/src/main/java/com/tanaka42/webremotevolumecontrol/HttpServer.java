@@ -1,4 +1,4 @@
-package com.tanaka42.webremotesoundcontrol;
+package com.tanaka42.webremotevolumecontrol;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +16,9 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -46,16 +48,20 @@ public class HttpServer extends Thread {
     public void run() {
         System.out.println("Starting server ...");
         try {
-            try(final DatagramSocket socket = new DatagramSocket()){
+            try {
+                final DatagramSocket socket = new DatagramSocket();
                 socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
                 server_ip = socket.getLocalAddress().getHostAddress();
                 socket.disconnect();
 
-                Intent urlUpdatedIntent = new Intent("com.tanaka42.webremotesoundcontrol.urlupdated");
+                Intent urlUpdatedIntent = new Intent("com.tanaka42.webremotevolumecontrol.urlupdated");
                 Bundle extras = new Bundle();
                 extras.putString("url", "http://" + server_ip + ":" + server_port);
                 urlUpdatedIntent.putExtras(extras);
                 context.sendBroadcast(urlUpdatedIntent);
+            } catch (SocketException ignored) {
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
             }
 
             InetAddress addr = InetAddress.getByName(server_ip);
@@ -132,7 +138,7 @@ public class HttpServer extends Thread {
                                 content_type = "image/png";
                                 break;
                             case "/":
-                                requestedFile = "webremotesoundcontrol_spa.html";
+                                requestedFile = "webremotevolumecontrol_spa.html";
                                 content_type = "text/html";
                                 break;
                             default:

@@ -1,6 +1,8 @@
 <resources>
+    <string name="app_name">Contrôle du Volume à Distance Web</string>
     <string name="close">Fermer</string>
     <string name="starting">Démarrage en cours&#8230;</string>
     <string name="running_indicator">Indicateur de fonctionnement</string>*
-    <string name="how_to">Connectez vous à l\'adresse ci-dessous depuis un autre appareil pour commencer à contrôler le son à distance.</string>
+    <string name="how_to">Connectez vous à l\'adresse ci-dessous depuis un autre appareil pour commencer à contrôler le volume à distance.</string>
+    <string name="close_when_ready">Le contrôle du volume à distance restera accessible après que vous ayez fermé cette fenêtre.</string>
 </resources>

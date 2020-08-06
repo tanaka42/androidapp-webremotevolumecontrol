@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -33,7 +34,11 @@ public class StartupActivity extends Activity {
         registerReceiver(urlUpdatedReceiver, new IntentFilter("com.tanaka42.webremotesoundcontrol.urlupdated"));
 
         Context context = getApplicationContext();
-        context.startForegroundService(new Intent(context, WebRemoteSoundControlService.class));
+        if (Build.VERSION.SDK_INT >= 26) {
+            context.startForegroundService(new Intent(context, WebRemoteSoundControlService.class));
+        } else {
+            context.startService(new Intent(context, WebRemoteSoundControlService.class));
+        }
 
         mURLTextView = findViewById(R.id.textViewURL);
         if (mServerURL.isEmpty()) {

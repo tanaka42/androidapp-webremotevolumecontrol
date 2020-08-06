@@ -21,16 +21,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="32sp"
+            android:textSize="@dimen/title_text_size"
             android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/textViewURL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingVertical="200dp"
+            android:paddingVertical="@dimen/url_vertical_padding"
             android:gravity="center"
-            android:textSize="22sp"
+            android:textSize="@dimen/url_text_size"
             android:layout_gravity="center" />
 
         <Button

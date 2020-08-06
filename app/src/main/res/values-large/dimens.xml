@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="inner_frame_layout_padding">5dp</dimen>
+    <dimen name="title_text_size">32sp</dimen>
+    <dimen name="url_text_size">22sp</dimen>
+    <dimen name="url_vertical_padding">200dp</dimen>
+</resources>

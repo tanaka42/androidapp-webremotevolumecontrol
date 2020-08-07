@@ -2,7 +2,7 @@
 Adjust sound volume of your Android device from any device that has a web browser.
 This includes non-Android devices such as Apple or Microsoft devices, maybe televisions or even maybe watches if these things have web browsers.
 
-This Android application will be free and will not include ads.
+This Android application will remain free and without ads.
 
 How to use it :
 ===============
@@ -15,7 +15,7 @@ How it actually works :
 =======================
 
 On your Android device, this app will start a lightweight minimalistic and app-specific web server, as a foreground service.
-This web server will listen on port 9000 (default) and serve a static html page (single page application).
+This web server will listen on port 9000 and serve a static html page (single page application).
 That single page will display only two buttons, Raise Volume and Lower Volume, which when clicked will asynchronously tell the web server / Android device to adjust main sound volume.
 
 The web server isn't really one : it does not list directories or serve any requested file from filesystem.

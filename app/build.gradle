@@ -8,8 +8,8 @@ android {
         applicationId "com.tanaka42.webremotevolumecontrol"
         minSdkVersion 17
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "20.29.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

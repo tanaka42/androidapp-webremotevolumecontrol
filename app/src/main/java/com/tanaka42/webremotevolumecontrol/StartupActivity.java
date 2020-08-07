@@ -15,6 +15,10 @@ public class StartupActivity extends Activity {
 
     private TextView mURLTextView;
     private Button mCloseButton;
+    private Button mEnableDisableButton;
+    private TextView mCloseHintTextView;
+    private TextView mHowToTextView;
+    private static boolean isServiceRunning = false;
     private static String mServerURL = "";
 
     private BroadcastReceiver urlUpdatedReceiver;
@@ -23,6 +27,65 @@ public class StartupActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
+
+        getReadyToReceiveURLforUI();
+
+        mCloseHintTextView = findViewById(R.id.textViewCloseWhenReady);
+        mHowToTextView = findViewById(R.id.textViewHowTo);
+
+        mURLTextView = findViewById(R.id.textViewURL);
+        if (mServerURL.isEmpty()) {
+            mURLTextView.setText(R.string.starting);
+        } else {
+            mURLTextView.setText(mServerURL);
+        }
+
+        mEnableDisableButton = findViewById(R.id.buttonEnableDisable);
+        mEnableDisableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isServiceRunning) {
+                    stopRemoteControlService();
+                } else {
+                    startRemoteControlService();
+                }
+            }
+        });
+
+        mCloseButton = findViewById(R.id.buttonClose);
+        mCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        startRemoteControlService();
+    }
+
+    private void startRemoteControlService() {
+        if (Build.VERSION.SDK_INT >= 26) {
+            startForegroundService(new Intent(this, ForegroundService.class));
+        } else {
+            startService(new Intent(this, ForegroundService.class));
+        }
+        mEnableDisableButton.setText(R.string.disable_volume_remote_control);
+        mHowToTextView.setText(R.string.how_to_enabled);
+        mURLTextView.setVisibility(View.VISIBLE);
+        mCloseHintTextView.setVisibility(View.VISIBLE);
+        isServiceRunning = true;
+    }
+
+    private void stopRemoteControlService() {
+        stopService(new Intent(this, ForegroundService.class));
+        mEnableDisableButton.setText(R.string.enable_volume_remote_control);
+        mHowToTextView.setText(R.string.how_to_disabled);
+        mURLTextView.setVisibility(View.INVISIBLE);
+        mCloseHintTextView.setVisibility(View.INVISIBLE);
+        isServiceRunning = false;
+    }
+
+    private void getReadyToReceiveURLforUI() {
         urlUpdatedReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -32,28 +95,6 @@ public class StartupActivity extends Activity {
             }
         };
         registerReceiver(urlUpdatedReceiver, new IntentFilter("com.tanaka42.webremotevolumecontrol.urlupdated"));
-
-        Context context = getApplicationContext();
-        if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(new Intent(context, ForegroundService.class));
-        } else {
-            context.startService(new Intent(context, ForegroundService.class));
-        }
-
-        mURLTextView = findViewById(R.id.textViewURL);
-        if (mServerURL.isEmpty()) {
-            mURLTextView.setText(R.string.starting);
-        } else {
-            mURLTextView.setText(mServerURL);
-        }
-
-        mCloseButton = findViewById(R.id.buttonClose);
-        mCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
     }
 
     @Override

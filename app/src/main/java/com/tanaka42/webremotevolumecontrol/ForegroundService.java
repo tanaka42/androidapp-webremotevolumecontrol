@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.IBinder;
@@ -34,18 +35,24 @@ public class ForegroundService extends Service {
         httpServer.start();
 
         String channelId = getString(R.string.app_name);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-        Intent notificationIntent = new Intent(this, ForegroundService.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        Notification notification;
 
         createNotificationChannel(channelId);
 
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+        Notification notification;
+
+        Intent notificationIntent = new Intent(getApplicationContext(), StartupActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, notificationIntent, 0);
+
         notification = new NotificationCompat.Builder(this, channelId)
+                .setOngoing(true)
+                .setContentTitle(getString(R.string.ongoing_notification_title))
+                .setContentText(getString(R.string.ongoing_notification_text))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
-                .setContentTitle("Content Title")
-                .setContentText("Content Text")
-                .setPriority(NotificationCompat.PRIORITY_LOW)
                 .build();
 
         startForeground(42, notification);

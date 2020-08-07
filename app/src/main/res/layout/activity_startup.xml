@@ -19,7 +19,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25"
+            android:layout_weight="0.16"
             android:orientation="vertical"
             android:gravity="center">
             <TextView
@@ -36,7 +36,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
+            android:layout_weight="0.16"
             android:orientation="vertical"
             android:gravity="center">
             <TextView
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/how_to"
+                android:text="@string/how_to_disabled"
                 android:textSize="@dimen/help_messages_text_size"
                 android:textColor="#000000" />
         </LinearLayout>
@@ -53,7 +53,7 @@
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
-            android:layout_weight="0.2"
+            android:layout_weight="0.16"
             android:orientation="vertical"
             android:gravity="center">
             <TextView
@@ -67,9 +67,25 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.16"
+            android:orientation="vertical"
+            android:gravity="center">
+            <Button
+                android:id="@+id/buttonEnableDisable"
+                android:text="@string/enable_volume_remote_control"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="50dp"
+                android:textColor="#000000"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="fill_parent"
-            android:layout_weight="0.2"
+            android:layout_weight="0.16"
             android:orientation="vertical"
             android:gravity="center">
             <TextView
@@ -86,7 +102,7 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2"
+            android:layout_weight="0.16"
             android:orientation="vertical"
             android:gravity="center">
             <Button

@@ -3,6 +3,11 @@
     <string name="close">Fermer</string>
     <string name="starting">Démarrage en cours&#8230;</string>
     <string name="running_indicator">Indicateur de fonctionnement</string>*
-    <string name="how_to">Connectez vous à l\'adresse ci-dessous depuis un autre appareil pour commencer à contrôler le volume à distance.</string>
+    <string name="how_to_enabled">Le contrôle du volume à distance est activé. Connectez vous à l\'adresse ci-dessous depuis un autre appareil pour commencer à contrôler le volume à distance.</string>
+    <string name="how_to_disabled">Le contrôle du volume à distance est désactivé. Vous devez d\'abord l\'activer pour pouvoir contrôle le volume sonore à distance.</string>
     <string name="close_when_ready">Le contrôle du volume à distance restera accessible après que vous ayez fermé cette fenêtre.</string>
+    <string name="ongoing_notification_title">@string/app_name</string>
+    <string name="ongoing_notification_text">Le contrôle du volume à distance est activé.</string>
+    <string name="enable_volume_remote_control">Activer le contrôle du volume à distance</string>
+    <string name="disable_volume_remote_control">Désactiver le contrôle du volume à distance</string>
 </resources>

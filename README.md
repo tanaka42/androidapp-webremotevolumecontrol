@@ -21,7 +21,7 @@ How it actually works :
 
 On your Android device, this app will start a lightweight minimalistic and app-specific web server, as a foreground service.  
 This web server will listen on port 9000 and serve a static html page (single page application).  
-That single page will display only two buttons, Raise Volume and Lower Volume, which when clicked will asynchronously tell the web server / Android device to adjust main sound volume.
+That page will display only two buttons, Raise Volume and Lower Volume, which when clicked will asynchronously tell the web server / Android device to adjust main sound volume.
 
 The web server isn't really one : it does not list directories or serve any requested file from filesystem.  
 It only responds to a few commands (URLs below) (see the switch case in HttpServer.java, subclass ClientThread, method Run) :  

@@ -1,7 +1,7 @@
 # AndroidApp-WebRemoteVolumeControl
-Adjust sound volume of your Android device from any device that has a web browser.
-This includes non-Android devices such as Apple or Microsoft devices, maybe televisions or even maybe watches if these things have web browsers.
-Both devices must be connected to the same local network (Wifi).
+Adjust sound volume of your Android device from any device that has a web browser.  
+This includes non-Android devices such as Apple or Microsoft devices, maybe televisions or even maybe watches if these things have web browsers.  
+Both devices must be connected to the same local network (Wifi).  
 
 This Android application will remain free and without ads.
 
@@ -17,12 +17,12 @@ How to use it :
 How it actually works :
 =======================
 
-On your Android device, this app will start a lightweight minimalistic and app-specific web server, as a foreground service.
-This web server will listen on port 9000 and serve a static html page (single page application).
+On your Android device, this app will start a lightweight minimalistic and app-specific web server, as a foreground service.  
+This web server will listen on port 9000 and serve a static html page (single page application).  
 That single page will display only two buttons, Raise Volume and Lower Volume, which when clicked will asynchronously tell the web server / Android device to adjust main sound volume.
 
-The web server isn't really one : it does not list directories or serve any requested file from filesystem.
-It only responds to a few commands (URLs below) (see the switch case in HttpServer.java, subclass ClientThread, method Run) :
+The web server isn't really one : it does not list directories or serve any requested file from filesystem.  
+It only responds to a few commands (URLs below) (see the switch case in HttpServer.java, subclass ClientThread, method Run) :  
 * / : serves the web page
 * /volume-up.png : serves the volume-up.png image included in the web page
 * /volume-down.png : serves the volume-up.png image included in the web page
@@ -30,7 +30,7 @@ It only responds to a few commands (URLs below) (see the switch case in HttpServ
 * /volume-down : lowers volume
 * any other URL will respond with a 404.
 
-Also it is supposed to listen only on local address : it obtains your local IP address and listens only on that address.
+Also it is supposed to listen only on local address : it obtains your local IP address and listens only on that address.  
 As a consequence it should not be accesible from the Internet, evenif your internet box doesn't have a firewall with 9000 port closed by default.
 
 Various information :

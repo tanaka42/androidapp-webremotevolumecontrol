@@ -11,6 +11,8 @@ How to use it :
 2. Then, on any other device connected on the same local network (Wifi) as your Android device, open a web browser (Chrome, Safari, Firefox, whatever, any web browser should work), and navigate to above address.
 3. Finally, on the page that appears, press buttons to remotely adjust your Android device's sound volume.
 
+![Captures d'écran de l'application](https://raw.githubusercontent.com/tanaka42/androidapp-webremotevolumecontrol/master/google-play-store-images-20.29.1/image_1024_500_en.png "Captures d'écran de l'application")
+
 How it actually works :
 =======================
 

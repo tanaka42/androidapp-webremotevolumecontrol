@@ -34,7 +34,7 @@ public class HttpServer extends Thread {
     private Context context;
     private static String server_ip;
     private static int server_port = 9000;
-    private static boolean isStart = true;
+    private static boolean isStart = false;
 
     public HttpServer(final AudioManager audio, final Context ctx) {
         try {
@@ -47,7 +47,7 @@ public class HttpServer extends Thread {
 
     @Override
     public void run() {
-        System.out.println("Starting server ...");
+        //System.out.println("Starting server ...");
         try {
             try {
                 final DatagramSocket socket = new DatagramSocket();
@@ -68,7 +68,8 @@ public class HttpServer extends Thread {
             InetAddress addr = InetAddress.getByName(server_ip);
             serverSocket = new ServerSocket(server_port, 100, addr);
             serverSocket.setSoTimeout(5000);
-            System.out.println("Server started : listening.");
+            isStart = true;
+            //System.out.println("Server started : listening.");
             while (isStart) {
                 try {
                     Socket newSocket = serverSocket.accept();
@@ -83,7 +84,10 @@ public class HttpServer extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //System.out.println("Server stopped");
     }
+
+
 
     public class ClientThread extends Thread {
         protected Socket socket;
@@ -201,12 +205,16 @@ public class HttpServer extends Thread {
     public static void stopServer() {
         if (isStart) {
             try {
+                //System.out.println("Stopping server ...");
                 isStart = false;
                 serverSocket.close();
-                System.out.println("Server stopped !");
             } catch (IOException er) {
                 er.printStackTrace();
             }
         }
+    }
+
+    public static boolean isStarted() {
+        return isStart;
     }
 }

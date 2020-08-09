@@ -17,6 +17,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 
 public class ForegroundService extends Service {
+
     public ForegroundService() {
     }
 
@@ -27,7 +28,7 @@ public class ForegroundService extends Service {
 
     @Override
     public void onCreate() {
-        System.out.println("Starting service ...");
+        //System.out.println("Starting service ...");
 
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -56,7 +57,7 @@ public class ForegroundService extends Service {
                 .build();
 
         startForeground(42, notification);
-        System.out.println("Service started.");
+        //System.out.println("Service started.");
     }
 
     private void createNotificationChannel(String channelId) {
@@ -70,7 +71,8 @@ public class ForegroundService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        System.out.println("Stopping Service");
+        //System.out.println("Stopping Service...");
         HttpServer.stopServer();
+        //System.out.println("Service stopped");
     }
 }

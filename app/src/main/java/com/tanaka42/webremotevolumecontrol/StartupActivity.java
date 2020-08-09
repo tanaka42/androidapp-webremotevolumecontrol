@@ -18,7 +18,6 @@ public class StartupActivity extends Activity {
     private Button mEnableDisableButton;
     private TextView mCloseHintTextView;
     private TextView mHowToTextView;
-    private static boolean isServiceRunning = false;
     private static String mServerURL = "";
 
     private BroadcastReceiver urlUpdatedReceiver;
@@ -44,7 +43,7 @@ public class StartupActivity extends Activity {
         mEnableDisableButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isServiceRunning) {
+                if (HttpServer.isStarted()) {
                     stopRemoteControlService();
                 } else {
                     startRemoteControlService();
@@ -73,7 +72,6 @@ public class StartupActivity extends Activity {
         mHowToTextView.setText(R.string.how_to_enabled);
         mURLTextView.setVisibility(View.VISIBLE);
         mCloseHintTextView.setVisibility(View.VISIBLE);
-        isServiceRunning = true;
     }
 
     private void stopRemoteControlService() {
@@ -82,7 +80,6 @@ public class StartupActivity extends Activity {
         mHowToTextView.setText(R.string.how_to_disabled);
         mURLTextView.setVisibility(View.INVISIBLE);
         mCloseHintTextView.setVisibility(View.INVISIBLE);
-        isServiceRunning = false;
     }
 
     private void getReadyToReceiveURLforUI() {

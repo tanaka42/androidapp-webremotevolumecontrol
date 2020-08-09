@@ -1,25 +1,30 @@
 # AndroidApp-WebRemoteVolumeControl
-Adjust sound volume of your Android device from any device that has a web browser.
-This includes non-Android devices such as Apple or Microsoft devices, maybe televisions or even maybe watches if these things have web browsers.
+Adjust sound volume of your Android device from any device that has a web browser.  
+This includes non-Android devices such as Apple or Microsoft devices, maybe televisions or even maybe watches if these things have web browsers.  
+
+Both devices must be connected to the same local network (Wifi).  
 
 This Android application will remain free and without ads.
 
 How to use it :
 ===============
 
-1. First, start this application on your Android device, it will display the internet address (URL, example : http://192.168.1.42:9000/) you will have to connect to in order to control sound volume remotely.
+1. First, start this application on the Android device you want to control sound volume remotely for,  
+   it will display the internet address (URL, example : http://192.168.1.42:9000/) you will have to connect to in order to control sound volume remotely.
 2. Then, on any other device connected on the same local network (Wifi) as your Android device, open a web browser (Chrome, Safari, Firefox, whatever, any web browser should work), and navigate to above address.
 3. Finally, on the page that appears, press buttons to remotely adjust your Android device's sound volume.
+
+![Captures d'écran de l'application](https://raw.githubusercontent.com/tanaka42/androidapp-webremotevolumecontrol/master/google-play-store-images-20.29.1/image_1024_500_en.png "Captures d'écran de l'application")
 
 How it actually works :
 =======================
 
-On your Android device, this app will start a lightweight minimalistic and app-specific web server, as a foreground service.
-This web server will listen on port 9000 and serve a static html page (single page application).
-That single page will display only two buttons, Raise Volume and Lower Volume, which when clicked will asynchronously tell the web server / Android device to adjust main sound volume.
+On your Android device, this app will start a lightweight minimalistic and app-specific web server, as a foreground service.  
+This web server will listen on port 9000 and serve a static html page (single page application).  
+That page will display only two buttons, Raise Volume and Lower Volume, which when clicked will asynchronously tell the web server / Android device to adjust main sound volume.
 
-The web server isn't really one : it does not list directories or serve any requested file from filesystem.
-It only responds to a few commands (URLs below) (see the switch case in HttpServer.java, subclass ClientThread, method Run) :
+The web server isn't really one : it does not list directories or serve any requested file from filesystem.  
+It only responds to a few commands (URLs below) (see the switch case in HttpServer.java, subclass ClientThread, method Run) :  
 * / : serves the web page
 * /volume-up.png : serves the volume-up.png image included in the web page
 * /volume-down.png : serves the volume-up.png image included in the web page
@@ -27,7 +32,7 @@ It only responds to a few commands (URLs below) (see the switch case in HttpServ
 * /volume-down : lowers volume
 * any other URL will respond with a 404.
 
-Also it is supposed to listen only on local address : it obtains your local IP address and listens only on that address.
+Also it is supposed to listen only on local address : it obtains your local IP address and listens only on that address.  
 As a consequence it should not be accesible from the Internet, evenif your internet box doesn't have a firewall with 9000 port closed by default.
 
 Various information :

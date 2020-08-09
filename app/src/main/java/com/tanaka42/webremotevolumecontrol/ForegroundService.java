@@ -57,7 +57,7 @@ public class ForegroundService extends Service {
                 .build();
 
         startForeground(42, notification);
-        //System.out.prin tln("Service started.");
+        //System.out.println("Service started.");
     }
 
     private void createNotificationChannel(String channelId) {

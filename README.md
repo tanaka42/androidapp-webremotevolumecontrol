@@ -4,8 +4,8 @@ This includes non-Android devices such as Apple or Microsoft devices, maybe tele
 
 Both devices must be connected to the same local network (Wifi).  
 
-This Android application is (and will remain) free, without ads and open source.
-You can find on Google Play Store here :
+This Android application is (and will remain) free, without ads and open source.  
+You can find on Google Play Store here :  
 [Web Remote Volume Control](https://play.google.com/store/apps/details?id=com.tanaka42.webremotevolumecontrol)
 
 

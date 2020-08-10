@@ -20,8 +20,8 @@ How to use it :
 
 ![Captures d'écran de l'application](https://raw.githubusercontent.com/tanaka42/androidapp-webremotevolumecontrol/master/google-play-store-images-20.29.1/image_1024_500_en.png "Captures d'écran de l'application")
 
-How it actually works :
-=======================
+How it works :
+==============
 
 On your Android device, this app will start a lightweight minimalistic and app-specific web server, as a foreground service.  
 This web server will listen on port 9000 and serve a static html page (single page application).  

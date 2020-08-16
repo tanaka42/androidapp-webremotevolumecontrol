@@ -18,7 +18,11 @@ public class StartupActivity extends Activity {
     private Button mEnableDisableButton;
     private TextView mCloseHintTextView;
     private TextView mHowToTextView;
+
     private static String mServerURL = "";
+    private static String mServerIp = "";
+    private static int mServerPort = 0;
+    private static boolean mServerIpIsClassC = true;
 
     private BroadcastReceiver urlUpdatedReceiver;
 
@@ -29,17 +33,12 @@ public class StartupActivity extends Activity {
 
         getReadyToReceiveURLforUI();
 
-        mCloseHintTextView = findViewById(R.id.textViewCloseWhenReady);
-        mHowToTextView = findViewById(R.id.textViewHowTo);
-
-        mURLTextView = findViewById(R.id.textViewURL);
-        if (mServerURL.isEmpty()) {
-            mURLTextView.setText(R.string.starting);
-        } else {
-            mURLTextView.setText(mServerURL);
-        }
-
+        mCloseHintTextView   = findViewById(R.id.textViewCloseWhenReady);
+        mHowToTextView       = findViewById(R.id.textViewHowTo);
+        mURLTextView         = findViewById(R.id.textViewURL);
         mEnableDisableButton = findViewById(R.id.buttonEnableDisable);
+        mCloseButton         = findViewById(R.id.buttonClose);
+
         mEnableDisableButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -51,13 +50,14 @@ public class StartupActivity extends Activity {
             }
         });
 
-        mCloseButton = findViewById(R.id.buttonClose);
         mCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+
+        updateActivity();
 
         startRemoteControlService();
     }
@@ -68,18 +68,37 @@ public class StartupActivity extends Activity {
         } else {
             startService(new Intent(this, ForegroundService.class));
         }
-        mEnableDisableButton.setText(R.string.disable_volume_remote_control);
-        mHowToTextView.setText(R.string.how_to_enabled);
-        mURLTextView.setVisibility(View.VISIBLE);
-        mCloseHintTextView.setVisibility(View.VISIBLE);
+        updateActivity();
     }
 
     private void stopRemoteControlService() {
         stopService(new Intent(this, ForegroundService.class));
-        mEnableDisableButton.setText(R.string.enable_volume_remote_control);
-        mHowToTextView.setText(R.string.how_to_disabled);
-        mURLTextView.setVisibility(View.INVISIBLE);
-        mCloseHintTextView.setVisibility(View.INVISIBLE);
+        updateActivity();
+    }
+
+    private void updateActivity() {
+        if (HttpServer.isStarted()) {
+            mEnableDisableButton.setText(R.string.disable_volume_remote_control);
+            mHowToTextView.setText(R.string.how_to_enabled);
+            mURLTextView.setText(mServerURL);
+            mURLTextView.setVisibility(View.VISIBLE);
+            mCloseHintTextView.setText(R.string.close_when_ready);
+            mCloseHintTextView.setVisibility(View.VISIBLE);
+        } else {
+            mEnableDisableButton.setText(R.string.enable_volume_remote_control);
+            if (mServerIpIsClassC) {
+                mHowToTextView.setText(R.string.how_to_disabled);
+                mCloseHintTextView.setVisibility(View.INVISIBLE);
+                mURLTextView.setVisibility(View.INVISIBLE);
+            } else {
+                mCloseHintTextView.setVisibility(View.INVISIBLE);
+                mURLTextView.setText(R.string.verify_local_network_connection);
+                mURLTextView.setVisibility(View.VISIBLE);
+                mCloseHintTextView.setVisibility(View.VISIBLE);
+                mCloseHintTextView.setText(R.string.about_class_c_limitation);
+                mHowToTextView.setText(R.string.how_to_unable_to_find_local_address);
+            }
+        }
     }
 
     private void getReadyToReceiveURLforUI() {
@@ -87,8 +106,10 @@ public class StartupActivity extends Activity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mServerURL = intent.getStringExtra("url");
-                mURLTextView = findViewById(R.id.textViewURL);
-                mURLTextView.setText(mServerURL);
+                mServerIp = intent.getStringExtra("ip");
+                mServerPort = intent.getIntExtra("port", 0);
+                mServerIpIsClassC = intent.getBooleanExtra("is_a_class_c_ip", true);
+                updateActivity();
             }
         };
         registerReceiver(urlUpdatedReceiver, new IntentFilter("com.tanaka42.webremotevolumecontrol.urlupdated"));

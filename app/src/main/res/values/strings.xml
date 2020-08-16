@@ -10,4 +10,7 @@
     <string name="ongoing_notification_text">Volume remote control is enabled.</string>
     <string name="enable_volume_remote_control">Enable volume remote control</string>
     <string name="disable_volume_remote_control">Disable volume remote control</string>
+    <string name="verify_local_network_connection">Verify that you are connected to your local network (Wifi).</string>
+    <string name="about_class_c_limitation">This application limits itself to Local Network IP addresses (Class C).</string>
+    <string name="how_to_unable_to_find_local_address">Volume remote control is disabled. Unable to find a local network IP address.</string>
 </resources>

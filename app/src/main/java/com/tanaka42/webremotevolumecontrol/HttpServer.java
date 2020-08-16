@@ -24,8 +24,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-
+import static java.lang.Integer.parseInt;
 
 
 public class HttpServer extends Thread {
@@ -34,6 +36,7 @@ public class HttpServer extends Thread {
     private Context context;
     private static String server_ip;
     private static int server_port = 9000;
+    private static boolean is_a_class_c_ip_address = false;
     private static boolean isStart = false;
 
     public HttpServer(final AudioManager audio, final Context ctx) {
@@ -45,45 +48,81 @@ public class HttpServer extends Thread {
         }
     }
 
+    private boolean isClassCAddress(String ip) {
+        if (ip != null && !ip.isEmpty()) {
+            Pattern pattern = Pattern.compile("(\\d+)\\.\\d+\\.\\d+\\.\\d+");
+            Matcher matcher = pattern.matcher(ip);
+            if (matcher.find()) {
+                if (matcher.groupCount() > 0) {
+                    String firstMemberString = matcher.group(1);
+                    if (firstMemberString != null) {
+                        int firstMember = parseInt(firstMemberString);
+                        return (192 <= firstMember && firstMember <= 223);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private void notifiy_observers() {
+        Intent urlUpdatedIntent = new Intent("com.tanaka42.webremotevolumecontrol.urlupdated");
+        Bundle extras = new Bundle();
+        extras.putString("url", "http://" + server_ip + ":" + server_port);
+        extras.putString("ip", server_ip);
+        extras.putInt("port", server_port);
+        extras.putBoolean("is_a_class_c_ip", is_a_class_c_ip_address);
+        urlUpdatedIntent.putExtras(extras);
+        context.sendBroadcast(urlUpdatedIntent);
+    }
+
     @Override
     public void run() {
         //System.out.println("Starting server ...");
+
+        // Determine local network IP address
         try {
-            try {
-                final DatagramSocket socket = new DatagramSocket();
-                socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-                server_ip = socket.getLocalAddress().getHostAddress();
-                socket.disconnect();
-
-                Intent urlUpdatedIntent = new Intent("com.tanaka42.webremotevolumecontrol.urlupdated");
-                Bundle extras = new Bundle();
-                extras.putString("url", "http://" + server_ip + ":" + server_port);
-                urlUpdatedIntent.putExtras(extras);
-                context.sendBroadcast(urlUpdatedIntent);
-            } catch (SocketException ignored) {
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-
-            InetAddress addr = InetAddress.getByName(server_ip);
-            serverSocket = new ServerSocket(server_port, 100, addr);
-            serverSocket.setSoTimeout(5000);
-            isStart = true;
-            //System.out.println("Server started : listening.");
-            while (isStart) {
-                try {
-                    Socket newSocket = serverSocket.accept();
-                    Thread newClient = new ClientThread(newSocket);
-                    newClient.start();
-                } catch (SocketTimeoutException ignored) {
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        } catch (Exception e) {
+            final DatagramSocket socket = new DatagramSocket();
+            socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+            server_ip = socket.getLocalAddress().getHostAddress();
+            socket.disconnect();
+        } catch (SocketException ignored) {
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+
+        // Check if determined IP address is a Class C one (a local network one, not an internet one).
+        is_a_class_c_ip_address = isClassCAddress(server_ip);
+
+        // update Activity
+        notifiy_observers();
+
+        // Start accepting request and responding
+        if (server_ip != null && is_a_class_c_ip_address) {
+            try {
+                InetAddress addr = InetAddress.getByName(server_ip);
+                serverSocket = new ServerSocket(server_port, 100, addr);
+                serverSocket.setSoTimeout(5000);
+                isStart = true;
+                //System.out.println("Server started : listening.");
+                while (isStart) {
+                    try {
+                        Socket newSocket = serverSocket.accept();
+                        Thread newClient = new ClientThread(newSocket);
+                        newClient.start();
+                    } catch (SocketTimeoutException ignored) {
+                    } catch (IOException ignored) {
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        isStart = false;
+        context.stopService(new Intent(context, ForegroundService.class));
+        // update Activity
+        notifiy_observers();
         //System.out.println("Server stopped");
     }
 

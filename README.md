@@ -1,6 +1,6 @@
 # AndroidApp-WebRemoteVolumeControl
-Adjust sound volume of your Android device from any device that has a web browser.  
-This includes non-Android devices such as Apple or Microsoft devices, maybe televisions or even maybe watches if these things have web browsers.  
+Adjust sound volume of your Android device from any device that has a web browser, Android or not.  
+Therefore, this also includes non-Android devices such as Apple or Microsoft devices, maybe televisions or even maybe watches if these things have web browsers.  
 
 Both devices must be connected to the same local network (Wifi).  
 
@@ -48,4 +48,4 @@ I did not include a Mute button or a Slider input at the moment because to do so
 
 This is my very first GitHub experience, and my very first Android experience too, any advice or remark is welcome.
 
-I did build that app because I often use an Android tablet, connected to an audio sound system (HiFi, an old one that does not have a remote controller), to play music, and I wanted to be able to adjust sound remotely from an Iphone, in a simple way (I mean not by using a Teamviewer/Vysor like thing).
+I did build that app because I often use an Android tablet, connected to an audio sound system (HiFi, an old one that does not have a remote controller), to play music, and I wanted to be able to adjust sound remotely from an iPhone, in a simple way (I mean not by using a Teamviewer/Vysor like thing).

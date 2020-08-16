@@ -36,8 +36,7 @@ It only responds to a few commands (URLs below) (see the switch case in HttpServ
 * /volume-down : lowers volume
 * any other URL will respond with a 404.
 
-Also it is supposed to listen only on local address : it obtains your local IP address and listens only on that address.  
-As a consequence it should not be accessible from the Internet, evenif your internet box doesn't have a firewall with 9000 port closed by default.
+Also it will listen only on local IP addresses : when it determines the IP address to listen on, it aborts if obtained IP address is not a Class C IP Adress (first member between 192 and 223 inclusive).
 
 Various information :
 =====================

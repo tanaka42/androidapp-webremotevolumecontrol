@@ -42,7 +42,13 @@
         <script type="application/javascript">
             function asyncVolume(e) {
                 console.log(e.id);
-                var xhr = new XMLHttpRequest();
+                const xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        const element = document.getElementById("current-volume");
+                        element.innerHTML = xhr.responseText;
+                    }
+                }
                 xhr.open("POST", "/" + e.id, true);
                 xhr.send();
                 return false;
@@ -53,6 +59,7 @@
     <div class="box" >
         <input type="image" name="volume-up" id="volume-up" value="volume-up" onclick="return asyncVolume(this);" src="/volume-up.png"/>
         <input type="image" name="volume-down" id="volume-down" value="volume-down"  onclick="return asyncVolume(this);" src="/volume-down.png" />
+	<p>Current volume <div id="current-volume"></div>%</p>
     </div>
     </body>
 </html>

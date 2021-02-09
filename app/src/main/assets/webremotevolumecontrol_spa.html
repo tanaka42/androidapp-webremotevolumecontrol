@@ -43,10 +43,10 @@
             function asyncVolume(e) {
                 console.log(e.id);
                 const xhr = new XMLHttpRequest();
-	        xhr.onreadystatechange = function() {
+                xhr.onreadystatechange = function() {
                     if (xhr.readyState == XMLHttpRequest.DONE) {
                         const element = document.getElementById("current-volume");
-			element.innerHTML = xhr.responseText;
+                        element.innerHTML = xhr.responseText;
                     }
                 }
                 xhr.open("POST", "/" + e.id, true);

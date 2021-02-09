@@ -168,13 +168,18 @@ public class HttpServer extends Thread {
 
                         status_code = "200";
                         String requestedFile = "";
+                        String currentVolume = "";
 
                         switch (requestLocation) {
                             case "/volume-up":
                                 audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
+                                currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toString();
+                                content_type = "text/html";
                                 break;
                             case "/volume-down":
                                 audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+                                currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toString();
+                                content_type = "text/html";
                                 break;
                             case "/volume-up.png":
                             case "/volume-down.png":
@@ -196,6 +201,9 @@ public class HttpServer extends Thread {
                             int size = fileStream.available();
                             buffer = new byte[size];
                             int readResult = fileStream.read(buffer);
+                        }
+                        if (!currentVolume.isEmpty()) {
+                            buffer = currentVolume.getBytes();
                         }
                         writeResponse(out, buffer.length + "", buffer, status_code, content_type);
                     }

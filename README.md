@@ -36,7 +36,7 @@ It only responds to a few commands (URLs below) (see the switch case in HttpServ
 * /volume-down : lowers volume
 * any other URL will respond with a 404.
 
-Also it will listen only on local IP addresses : when it determines the IP address of your Android device to listen on, it aborts if obtained IP address is not a Class C IP address (aka Local Area Network IP address, first member between 192 and 223 inclusive).
+Also it will listen only on local IP addresses : when it determines the IP address of your Android device to listen on, it aborts if obtained IP address is not a private IP address (in one of the three private ranges detailed here : https://en.wikipedia.org/wiki/Private_network#Private_IPv4_addresses).
 
 Various information :
 =====================

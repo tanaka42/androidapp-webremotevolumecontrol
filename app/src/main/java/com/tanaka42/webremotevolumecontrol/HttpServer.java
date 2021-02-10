@@ -36,7 +36,7 @@ public class HttpServer extends Thread {
     private Context context;
     private static String server_ip;
     private static int server_port = 9000;
-    private static boolean is_a_class_c_ip_address = false;
+    private static boolean is_a_private_ip_address = false;
     private static boolean isStart = false;
 
     public HttpServer(final AudioManager audio, final Context ctx) {
@@ -48,16 +48,23 @@ public class HttpServer extends Thread {
         }
     }
 
-    private boolean isClassCAddress(String ip) {
+    private boolean isPrivateAddress(String ip) {
         if (ip != null && !ip.isEmpty()) {
-            Pattern pattern = Pattern.compile("(\\d+)\\.\\d+\\.\\d+\\.\\d+");
+            Pattern pattern = Pattern.compile("(\\d+)\\.(\\d+)\\.\\d+\\.\\d+");
             Matcher matcher = pattern.matcher(ip);
             if (matcher.find()) {
-                if (matcher.groupCount() > 0) {
+                if (matcher.groupCount() > 1) {
                     String firstMemberString = matcher.group(1);
-                    if (firstMemberString != null) {
+                    String secondMemberString = matcher.group(2);
+                    if (firstMemberString != null && secondMemberString != null) {
                         int firstMember = parseInt(firstMemberString);
-                        return (192 <= firstMember && firstMember <= 223);
+                        int secondMember = parseInt(secondMemberString);
+                        // As pointed out to me by Joe Harrison, I have to check for all three valid private ip ranges, as detailed here https://en.wikipedia.org/wiki/Private_network#Private_IPv4_addresses
+                        return (
+                                    (firstMember == 10)                                               // 10.0.0.0 – 10.255.255.255
+                                 || (firstMember == 172 && 16 <= secondMember && secondMember <= 31)  // 172.16.0.0 – 172.31.255.255
+                                 || (firstMember == 192 && secondMember == 168)                       // 192.168.0.0 – 192.168.255.255
+                        );
                     }
                 }
             }
@@ -65,13 +72,13 @@ public class HttpServer extends Thread {
         return false;
     }
 
-    private void notifiy_observers() {
+    private void notify_observers() {
         Intent urlUpdatedIntent = new Intent("com.tanaka42.webremotevolumecontrol.urlupdated");
         Bundle extras = new Bundle();
         extras.putString("url", "http://" + server_ip + ":" + server_port);
         extras.putString("ip", server_ip);
         extras.putInt("port", server_port);
-        extras.putBoolean("is_a_class_c_ip", is_a_class_c_ip_address);
+        extras.putBoolean("is_a_private_ip", is_a_private_ip_address);
         urlUpdatedIntent.putExtras(extras);
         context.sendBroadcast(urlUpdatedIntent);
     }
@@ -91,14 +98,15 @@ public class HttpServer extends Thread {
             e.printStackTrace();
         }
 
-        // Check if determined IP address is a Class C one (a local network one, not an internet one).
-        is_a_class_c_ip_address = isClassCAddress(server_ip);
+        // Check if determined IP address is a private one (a local network one, not an internet one).
+        // As pointed out to me by Joe Harrison, 192.168.*.* is not the only private range, 10.*.*.* and 172.16.0.0 - 172.31.255.255 are private too.
+        is_a_private_ip_address = isPrivateAddress(server_ip);
 
         // update Activity
-        notifiy_observers();
+        notify_observers();
 
         // Start accepting request and responding
-        if (server_ip != null && is_a_class_c_ip_address) {
+        if (server_ip != null && is_a_private_ip_address) {
             try {
                 InetAddress addr = InetAddress.getByName(server_ip);
                 serverSocket = new ServerSocket(server_port, 100, addr);
@@ -122,7 +130,7 @@ public class HttpServer extends Thread {
         isStart = false;
         context.stopService(new Intent(context, ForegroundService.class));
         // update Activity
-        notifiy_observers();
+        notify_observers();
         //System.out.println("Server stopped");
     }
 
@@ -164,30 +172,35 @@ public class HttpServer extends Thread {
                         String[] header = recData.split("\\r?\\n");
                         String[] h1 = header[0].split(" ");
 
-                        final String requestLocation = h1[1];
-
-                        status_code = "200";
                         String requestedFile = "";
 
-                        switch (requestLocation) {
-                            case "/volume-up":
-                                audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
-                                break;
-                            case "/volume-down":
-                                audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
-                                break;
-                            case "/volume-up.png":
-                            case "/volume-down.png":
-                                requestedFile = requestLocation.substring(1);
-                                content_type = "image/png";
-                                break;
-                            case "/":
-                                requestedFile = "webremotevolumecontrol_spa.html";
-                                content_type = "text/html";
-                                break;
-                            default:
-                                status_code = "404";
-                                break;
+                        if (h1.length > 1) {
+                            final String requestLocation = h1[1];
+
+                            status_code = "200";
+
+                            switch (requestLocation) {
+                                case "/volume-up":
+                                    audioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
+                                    break;
+                                case "/volume-down":
+                                    audioManager.adjustVolume(AudioManager.ADJUST_LOWER, AudioManager.FLAG_PLAY_SOUND);
+                                    break;
+                                case "/volume-up.png":
+                                case "/volume-down.png":
+                                    requestedFile = requestLocation.substring(1);
+                                    content_type = "image/png";
+                                    break;
+                                case "/":
+                                    requestedFile = "webremotevolumecontrol_spa.html";
+                                    content_type = "text/html";
+                                    break;
+                                default:
+                                    status_code = "404";
+                                    break;
+                            }
+                        } else {
+                            status_code = "404";
                         }
 
                         byte[] buffer = new byte[0];

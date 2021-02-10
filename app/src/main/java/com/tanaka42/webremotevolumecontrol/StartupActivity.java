@@ -22,7 +22,7 @@ public class StartupActivity extends Activity {
     private static String mServerURL = "";
     private static String mServerIp = "";
     private static int mServerPort = 0;
-    private static boolean mServerIpIsClassC = true;
+    private static boolean mServerIpIsPrivate = true;
 
     private BroadcastReceiver urlUpdatedReceiver;
 
@@ -86,7 +86,7 @@ public class StartupActivity extends Activity {
             mCloseHintTextView.setVisibility(View.VISIBLE);
         } else {
             mEnableDisableButton.setText(R.string.enable_volume_remote_control);
-            if (mServerIpIsClassC) {
+            if (mServerIpIsPrivate) {
                 mHowToTextView.setText(R.string.how_to_disabled);
                 mCloseHintTextView.setVisibility(View.INVISIBLE);
                 mURLTextView.setVisibility(View.INVISIBLE);
@@ -95,7 +95,7 @@ public class StartupActivity extends Activity {
                 mURLTextView.setText(R.string.verify_local_network_connection);
                 mURLTextView.setVisibility(View.VISIBLE);
                 mCloseHintTextView.setVisibility(View.VISIBLE);
-                mCloseHintTextView.setText(R.string.about_class_c_limitation);
+                mCloseHintTextView.setText(R.string.about_private_limitation);
                 mHowToTextView.setText(R.string.how_to_unable_to_find_local_address);
             }
         }
@@ -108,7 +108,7 @@ public class StartupActivity extends Activity {
                 mServerURL = intent.getStringExtra("url");
                 mServerIp = intent.getStringExtra("ip");
                 mServerPort = intent.getIntExtra("port", 0);
-                mServerIpIsClassC = intent.getBooleanExtra("is_a_class_c_ip", true);
+                mServerIpIsPrivate = intent.getBooleanExtra("is_a_private_ip", true);
                 updateActivity();
             }
         };

@@ -1,12 +1,12 @@
 # AndroidApp-WebRemoteVolumeControl
-Adjust sound volume of your Android device from any device that has a web browser, Android or not.  
+Adjust sound volume of your Android device remotely from any device that has a web browser, Android or not.  
 Therefore, this also includes non-Android devices such as Apple or Microsoft devices, maybe televisions or even maybe watches if these things have web browsers.  
 
-Both devices must be connected to the same local network (Wifi).  
+Both devices must be connected to the same Local Area Network (e.g. Wifi).  
 
 This Android application is (and will remain) free, without ads and open source.  
 
-You can find on Google Play Store here :  
+You can find it on Google Play Store here :  
 [Web Remote Volume Control](https://play.google.com/store/apps/details?id=com.tanaka42.webremotevolumecontrol)
 
 
@@ -15,7 +15,7 @@ How to use it :
 
 1. First, start this application on the Android device of which you want to control sound volume remotely,  
    it will display the internet address (URL, example : http://192.168.1.35:9000/) you will have to connect to in order to control sound volume remotely.
-2. Then, on any other device connected on the same local network (Wifi) as your Android device, open a web browser (Chrome, Safari, Firefox, whatever, any web browser should work), and navigate to above address.
+2. Then, on any other device connected on the same local network (Wifi) as your Android device, open a web browser (Chrome, Safari, Firefox, whatever, any web browser should work), and navigate to address obtained it step 1.
 3. Finally, on the page that appears, press buttons to remotely adjust your Android device's sound volume.
 
 ![Captures d'écran de l'application](https://raw.githubusercontent.com/tanaka42/androidapp-webremotevolumecontrol/master/google-play-store-images-20.29.1/image_1024_500_en.png "Captures d'écran de l'application")
@@ -36,13 +36,13 @@ It only responds to a few commands (URLs below) (see the switch case in HttpServ
 * /volume-down : lowers volume
 * any other URL will respond with a 404.
 
-Also it is supposed to listen only on local address : it obtains your local IP address and listens only on that address.  
-As a consequence it should not be accessible from the Internet, evenif your internet box doesn't have a firewall with 9000 port closed by default.
+Also it will listen only on local IP addresses : when it determines the IP address of your Android device to listen on, it aborts if obtained IP address is not a Class C IP address (aka Local Area Network IP address, first member between 192 and 223 inclusive).
 
 Various information :
 =====================
 
-The base HTTP server code comes from Sonu Auti which I hereby thank : https://github.com/sonuauti/Android-Web-Server/
+The base HTTP server code comes from Sonu Auti which I hereby thank : https://github.com/sonuauti/Android-Web-Server/  
+From his project, I have kept only the small part I needed : if you are here to see an implentation of an http server, then be sure to look at his work instead of mine.
 
 I did not include a Mute button or a Slider input at the moment because to do so Android API seems to require me to point at a specific audio stream : I supposed this would not work in some situations, or make things complicated, so I gave up for now.
 
